@@ -561,3 +561,22 @@ button:hover {
 .content, .bg-darker {
     background: rgba(0, 0, 0, 0.55) !important;
 }
+
+/* ================================
+   BASTEN GAMING — 3 WALLPAPER SLIDESHOW
+   ================================ */
+
+.bgIMG {
+    animation: slideBG 45s infinite ease-in-out;
+    background-size: cover !important;
+    background-position: center !important;
+    background-repeat: no-repeat !important;
+}
+
+/* 3 Wallpaper Berganti Setiap 15 Detik */
+@keyframes slideBG {
+    0%   { background-image: url("/mnt/data/🔥BOOM! PES 2026 DUAL MODE PS4PS5 HEN!! BASTEN GAMING PATCH!! SATU GAME = 2 DUNIA 😱🔥.jpg"); }
+    33%  { background-image: url("/mnt/data/new start screenOK.png"); }
+    66%  { background-image: url("/mnt/data/titlePressStart_pes_tex000.png"); }
+    100% { background-image: url("/mnt/data/🔥BOOM! PES 2026 DUAL MODE PS4PS5 HEN!! BASTEN GAMING PATCH!! SATU GAME = 2 DUNIA 😱🔥.jpg"); }
+}
