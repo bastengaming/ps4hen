@@ -1,204 +1,57 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8">
-<title>Basten Gaming Host For PS4 505 & 672 & 702 & 75X & 900</title>
-<style type="text/css">
-body {
-  background-color: #000000;
-  background-repeat:no-repeat;
-  height:95%;
-}
-
-/* Merah hitam style baru */
-button {
-    background: linear-gradient(180deg, #ff3b3b, #b00000);
-    box-shadow: 0 5px 20px 0 rgba(255,0,0,0.8);
-    border: 2px solid #700000;
-    border-radius: 12px;
-    width: 170px;
-    height: 43px;
-    text-align: center;
-    padding: 6px;
-    margin: 6px;
-    color: white;
-    font-weight: bold;
-}
-button:hover {
-    background: linear-gradient(180deg, #ff5555, #cc0000);
-    box-shadow: 0 5px 40px 0 red;
-    border-radius: 12px;
-}
-
-/* Clock & Date */
-#clock{
- float:right;
- margin-right:2.25%;
- margin-top: 18px;
- font-weight:bold;
- font-size:28px;
- color: #ff4444;
-}
-#date {
- float:left;
- margin-left:1.25%;
- font-weight:bold;
- margin-top: 18px;
- font-size:28px;
- color: #ff4444;
-}
-
-/* Container panel */
-.content {
-  width:80%;
-  margin-left:7.5%;
-  background:rgba(80,0,0,0.4);
-  color:white;
-  margin-top:1%;
-  font-size:25px;
-  text-align:center;
-  border-radius:30px;
-  padding:20px;
-  line-height:40px;
-  box-shadow:0 0 20px red;
-}
-.title {
-  font-size:40px;
-  font-weight:bolder;
-  margin-bottom:10px;
-}
-
-.yellow {color:#ffdd55;}
-
-.hue {
-  color:white;
-  padding:10px;
-  border-radius:10px;
-  animation:hue 5s linear infinite;
-  box-shadow: 0px 0px 50px #ff0000;
-  background:rgba(255,0,0,0.4);
-}
-.hue:hover{
-  color:#ff0000;
-  background:transparent;
-}
-
-@keyframes hue{
- 0%{ filter:hue-rotate(0deg); }
- 100%{ filter:hue-rotate(360deg); }
-}
-
-.text { padding-bottom:50px; }
-
-.back {
-   font-size:25px;
-   margin-top:10px;
-   display:block;
-   line-height:55px;
-   width:20%;
-   text-decoration:none;
-   height:50px;
-   background:red;
-   color:black;
-   border-radius:15px;
-}
-.back:hover{
-   border:2px solid white;
-   background:transparent;
-   color:white;
-}
-.pointer {cursor: pointer;}
-</style>
-
-<script>
-function showdate() {
-  var dt = new Date();
-  Hour = dt.getHours();
-  Minute = dt.getMinutes();
-  Day = dt.getDate();
-  Month = dt.getMonth()+1;
-  Year = dt.getFullYear();
-  if (Minute < 10) { Minute = "0" + Minute; }
-  if (Hour < 10) { Hour = "0" + Hour; }
-  document.getElementById("date").innerHTML = (Day+"/"+Month+"/"+Year);
-  document.getElementById("clock").innerHTML = (Hour+":"+Minute);
-}
-setInterval(showdate,0);
-</script>
+    <meta charset="utf-8">
+    <title>BASTEN GAMING HOST</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-<div id="container">
-<span id="date"></span>
-<span id="clock"></span>
 
-<h1 style='font-size:25px;text-align:center;color:#ff5555;'>
-<B>Basten Gaming Host For PS4 505 & 672 & 702 & 75X & 900</B>
-</h1>
+<!-- TOP NAVBAR -->
+<header class="top-nav">
+    <div class="nav-left">
+        <span class="nav-logo-text">BASTEN GAMING</span>
+    </div>
 
-<h1 id=msgs2 style='font-size:25px;text-align:center;color:white;'>Status</h1>
+    <nav class="nav-right">
+        <a href="index.html">Home</a>
+        <a href="#firmware">Firmware</a>
+        <a href="tutorial.html">Tutorial</a>
+    </nav>
+</header>
 
-<div style="text-align:center" id="MyItems">
+<!-- HERO SECTION -->
+<section class="hero">
+    <h1 class="hero-title">BASTEN GAMING HOST</h1>
+    <p class="hero-subtitle">PS4 Exploit & Payload Menu</p>
+</section>
 
-<a href="copych/index.html"><button class="pointer" onMouseOver="msgs2.innerHTML='Copy Cheat For 505 & 672 & 702 & 755 & 900 by Basten Gaming'" onmouseout="msgs2.innerHTML='Status'"><b>Copy Cheat</b></button></a>
+<main class="main-area" id="firmware">
 
-<a href="https://karo218.ir/espweb/index.html"><button class="pointer" onMouseOver="msgs2.innerHTML='WEB ESP For 505 & 672 & 702 & 755 & 900'" onmouseout="msgs2.innerHTML='Status'" style="color:#ffdddd"><b>WEB ESP</b></button></a>
+    <h2 class="section-title">SELECT YOUR FIRMWARE</h2>
+    <div class="divider"></div>
 
-<a href="binloader/index.html"><button class="pointer" onMouseOver="msgs2.innerHTML='Binloader For 505 & 672 & 702 & 755 & 900'" onmouseout="msgs2.innerHTML='Status'"><b>Binloader</b></button></a>
-<br>
+    <!-- FIRMWARE BUTTONS (POSITION TIDAK DIUBAH) -->
+    <div class="fw-grid">
 
-<a href="505/index.html"><button class="pointer" onMouseOver="msgs2.innerHTML='Basten Gaming Host For 505'" onmouseout="msgs2.innerHTML='Status'"><b>5.05 old</b></button></a>
+        <button class="fw-btn" onclick="location.href='fw505.html'">5.05 FW GoldHEN</button>
+        <button class="fw-btn" onclick="location.href='fw672.html'">6.72 FW GoldHEN</button>
+        <button class="fw-btn" onclick="location.href='fw702.html'">7.02 FW GoldHEN</button>
+        <button class="fw-btn" onclick="location.href='fw755.html'">7.50 - 7.55 FW GoldHEN</button>
 
-<a href="505Gold/index.html"><button class="pointer" onMouseOver="msgs2.innerHTML='Basten Gaming Gold For 505'" onmouseout="msgs2.innerHTML='Status'"><b>5.05 Gold</b></button></a>
+        <button class="fw-btn" onclick="location.href='fw900.html'">9.00 FW GoldHEN</button>
+        <button class="fw-btn" onclick="location.href='fw1100.html'">11.00 FW GoldHEN</button>
+        <button class="fw-btn" onclick="location.href='fw1202.html'">12.02 FW PsFree GoldHEN</button>
 
-<a href="Goldhen505/index.html"><button class="pointer" onMouseOver="msgs2.innerHTML='GoldHEN V2.416b2 For 505 (Basten Gaming)'" onmouseout="msgs2.innerHTML='Status'"><b>Goldhen505</b></button></a>
-<br>
+    </div>
+</main>
 
-<a href="672/index.html"><button class="pointer"><b>6.72</b></button></a>
-<a href="672A/index.html"><button class="pointer"><b>6.72A</b></button></a>
-<a href="672L/index.html"><button class="pointer"><b>6.72L</b></button></a>
-<a href="Goldhen672/index.html"><button class="pointer"><b>Goldhen672</b></button></a>
-<br>
+<footer class="footer">
+    © 2017–2025 Basten Gaming – Custom PS4 Host
+</footer>
 
-<a href="702/index.html"><button class="pointer"><b>7.02</b></button></a>
-<a href="702L/index.html"><button class="pointer"><b>7.02L</b></button></a>
-<a href="http://karo218.ir/702Gold/index.html"><button class="pointer"><b>7.02 Gold</b></button></a>
-<a href="G702/index.html"><button class="pointer"><b>Goldhen702</b></button></a>
-<br>
-
-<a href="755/index.html"><button class="pointer"><b>7.55</b></button></a>
-<a href="755L/index.html"><button class="pointer"><b>7.55L</b></button></a>
-<a href="http://karo218.ir/755Gold/index.html"><button class="pointer"><b>7.55 Gold</b></button></a>
-<a href="G755/index.html"><button class="pointer"><b>Goldhen755</b></button></a>
-<br>
-
-<a href="900L/index.html"><button class="pointer"><b>9.00L</b></button></a>
-<a href="900NM/index.html"><button class="pointer"><b>9.00NM</b></button></a>
-<a href="900New/index.html"><button class="pointer"><b>9.00 New</b></button></a>
-<a href="G900/index.html"><button class="pointer"><b>Goldhen900</b></button></a>
-<br>
-
-<a href="http://karo218.ir/PS4TRAINER/index.html">
-<button style='width: 470px;height: 50px;' class="pointer">
-<b>PS4Trainer Offline (27.01.2024)</b>
-</button></a><br>
-
-<a href="restore/index.html">
-<button style='width: 300px;height: 50px;' class="pointer"><b>Restore Host</b></button></a>
-
-<a href="restore2/index.html">
-<button style='width: 300px;height: 50px;' class="pointer"><b>Restore PS4Trainer Offline</b></button></a>
-
-<a href="http://karo218.ir/esp/index.html">
-<button style='width: 300px;height: 50px;' class="pointer"><b>Restore ESP Hosts</b></button></a>
-
-<div class="content">
-  <div class="text">
-   <span class="yellow">Modified & Themed By :</span>
-   <span class="hue">Basten Gaming</span>
-  </div>
-</div>
-
-</div>
 </body>
 </html>
 
