@@ -1,101 +1,91 @@
 
-// sendpayload.js
-// Sender + hidden auto-detect helper for PS4 GoldHEN BinServer (port 9021).
-// - tryDetectPS4() returns first responsive IP or null
-// - send(path) fetches payload (from cache if offline) and POSTs to PS4
+// sendpayload.js (FINAL VERSION)
+// - No more repeated IP prompt
+// - Asks ONLY ONCE if auto-detect failed
+// - Saves IP permanently in localStorage
+// - Uses offline cache if available
+// - Sends payload to GoldHEN BinServer (port 9021)
 
-// small helper: fetch with timeout
-function fetchWithTimeout(url, opts = {}, ms = 800) {
-  const controller = new AbortController();
-  const id = setTimeout(()=>controller.abort(), ms);
-  const finalOpts = Object.assign({}, opts, { signal: controller.signal });
-  return fetch(url, finalOpts).finally(()=>clearTimeout(id));
-}
-
-// Try a limited set of common IP patterns to avoid heavy scanning.
-// Returns first IP that responds to http://IP:9021/ping or null.
+// Auto-detect helper (kept simple)
 async function tryDetectPS4() {
-  const candidates = [];
+    const candidates = [];
 
-  // common local subnets & ranges (small window)
-  ['192.168.1.', '192.168.0.', '10.0.0.'].forEach(prefix=>{
-    // try .10 .. .20 (covers most PS4 default DHCP assignments)
-    for(let i=10;i<=20;i++) candidates.push(prefix + i);
-  });
-
-  // Also try some common single-host guesses
-  candidates.push('192.168.1.100','192.168.1.11','192.168.0.100');
-
-  for(const ip of candidates) {
-    try {
-      // try minimal fetch to /ping (no-cors may not throw, so we rely on timeout)
-      // use http protocol; goldhen's BinServer normally answers without CORS on PS4.
-      await fetchWithTimeout('http://' + ip + ':9021/ping', { mode: 'no-cors' }, 700);
-      // If fetch does not throw (or was not aborted) we assume reachable
-      return ip;
-    } catch(e){
-      // ignore and continue
-    }
-  }
-  return null;
-}
-
-// Exposed send function used by index.html buttons
-async function send(path) {
-  try { document.getElementById('progress-visible').textContent = 'Fetching ' + path + ' ...'; } catch(e){}
-  let ip = (localStorage.getItem('ps4ip') || '').trim();
-
-  // if no saved IP, try auto-detect now (blocking fallback)
-  if(!ip) {
-    try { document.getElementById('progress-visible').textContent = 'Auto-detecting PS4...'; } catch(e){}
-    ip = await tryDetectPS4();
-    if(ip) {
-      localStorage.setItem('ps4ip', ip);
-      try { document.getElementById('progress-visible').textContent = 'PS4 detected: ' + ip; } catch(e){}
-    } else {
-      // fallback prompt
-      const ask = prompt('Masukkan IP PS4 (misal 192.168.1.10):');
-      if(!ask) {
-        alert('Tidak ada IP. Batal.');
-        try { document.getElementById('progress-visible').textContent = 'Idle'; } catch(e){}
-        return;
-      }
-      ip = ask.trim();
-      localStorage.setItem('ps4ip', ip);
-    }
-  }
-
-  const binUrl = 'http://' + ip + ':9021/sendpayload';
-
-  try {
-    // fetch payload (from cache if offline)
-    const r = await fetch(path, { cache: "no-store" });
-    if(!r.ok) throw new Error('HTTP ' + r.status);
-    const buf = await r.arrayBuffer();
-
-    try { document.getElementById('progress-visible').textContent = 'Sending to ' + ip + ' ...'; } catch(e){}
-
-    // send to GoldHEN BinServer
-    const sendResp = await fetch(binUrl, {
-      method: 'POST',
-      mode: 'cors',
-      headers: { 'Content-Type': 'application/octet-stream' },
-      body: buf
+    // Common LAN subnets
+    ['192.168.1.', '192.168.0.', '10.0.0.'].forEach(prefix => {
+        for (let i = 1; i <= 50; i++) {   // RANGE DIPERLUAS
+            candidates.push(prefix + i);
+        }
     });
 
-    if(sendResp.ok) {
-      alert('Payload DIKIRIM: ' + path + '\nSize: ' + buf.byteLength + ' bytes\nPeriksa PS4.');
-      try { document.getElementById('done').textContent = 'Pass = 0'; } catch(e){}
-    } else {
-      const text = await sendResp.text().catch(()=>sendResp.status);
-      alert('Gagal kirim payload. Response: ' + text);
-      try { document.getElementById('fail').textContent = 'Fail = 1'; } catch(e){}
+    for (const ip of candidates) {
+        try {
+            await fetch("http://" + ip + ":9021/ping", { method: "GET", mode: "no-cors" });
+            return ip; // sukses
+        } catch (e) {}
     }
-  } catch (err) {
-    alert('Error saat load/kirim payload:\n' + err);
-    try { document.getElementById('fail').textContent = 'Fail = 1'; } catch(e){}
-  } finally {
-    try{ document.getElementById('progress-visible').textContent = 'Idle'; } catch(e){}
-  }
+    return null; // gagal detect
+}
+
+
+// ========== MAIN SENDER FUNCTION ==========
+async function send(path) {
+    // --- STEP 1: get saved IP (if any) ---
+    let ip = localStorage.getItem('ps4ip');
+
+    // --- STEP 2: if IP not saved, try auto-detect ---
+    if (!ip || ip.trim() === "") {
+
+        // coba deteksi otomatis
+        document.getElementById('payload-desc').textContent = "Detecting PS4 IP...";
+        const detected = await tryDetectPS4();
+
+        if (detected) {
+            ip = detected;
+            localStorage.setItem('ps4ip', ip);
+        } else {
+            // fallback: tanya IP sekali saja
+            const ask = prompt("Enter your PS4 IP address:");
+            if (!ask) {
+                alert("IP is required.");
+                return;
+            }
+            ip = ask.trim();
+            localStorage.setItem('ps4ip', ip);   // SIMPAN PERMANEN
+        }
+    }
+
+    // --- STEP 3: Fetch payload from cache/server ---
+    try {
+        document.getElementById('progress-visible').textContent = "Loading: " + path;
+
+        const r = await fetch(path, { cache: "no-store" });
+        if (!r.ok) throw new Error("HTTP " + r.status);
+
+        const payloadBuffer = await r.arrayBuffer();
+
+        // --- STEP 4: Send to GoldHEN BinServer ---
+        const urlSend = "http://" + ip + ":9021/sendpayload";
+        document.getElementById('progress-visible').textContent = "Sending to PS4...";
+
+        const sendResp = await fetch(urlSend, {
+            method: "POST",
+            headers: { "Content-Type": "application/octet-stream" },
+            body: payloadBuffer
+        });
+
+        if (sendResp.ok) {
+            alert("Payload sent successfully!\n" + path);
+            document.getElementById('done').textContent = "Pass = 1";
+        } else {
+            alert("Failed to send payload.\nStatus: " + sendResp.status);
+            document.getElementById('fail').textContent = "Fail = 1";
+        }
+
+    } catch (err) {
+        alert("Error sending payload:\n" + err);
+        document.getElementById('fail').textContent = "Fail = 1";
+    } finally {
+        document.getElementById('progress-visible').textContent = "Idle";
+    }
 }
 
